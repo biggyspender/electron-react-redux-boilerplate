@@ -2,7 +2,9 @@ import { spawn } from 'child_process';
 import electron from 'electron';
 import browserSync from 'browser-sync';
 import browserSyncConnectUtils from 'browser-sync/dist/connect-utils';
+import { blinq } from "blinq"
 
+//console.log('monkey', process.argv)
 const bsync = browserSync.create();
 
 const getRootUrl = (options) => {
@@ -16,7 +18,7 @@ const getClientUrl = (options) => {
 };
 
 function runElectron(browserSyncUrl) {
-  const child = spawn(electron, ['.', '--enable-logging'], {
+  const child = spawn(electron, [...blinq(process.argv).skip(2), '--enable-logging', '.'], {
     env: {
       ...{
         NODE_ENV: 'development',
