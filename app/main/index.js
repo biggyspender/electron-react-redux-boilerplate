@@ -1,6 +1,5 @@
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
-
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 let mainWindow = null;
@@ -38,7 +37,6 @@ app.on('ready', async () => {
   if (isDevelopment) {
     await installExtensions();
   }
-
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -83,7 +81,7 @@ app.on('ready', async () => {
 
   if (isDevelopment) {
     // auto-open dev tools
-    //mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // add inspect element on right click menu
     mainWindow.webContents.on('context-menu', (e, props) => {

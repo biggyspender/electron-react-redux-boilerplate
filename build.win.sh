@@ -10,4 +10,4 @@ docker run --rm -ti \
  -v ~/.cache/electron:/root/.cache/electron \
  -v ~/.cache/electron-builder:/root/.cache/electron-builder \
  electronuserland/builder:wine \
- bash -c 'yarn && yarn pack:win'
+ bash -c 'npm install && npm run pack:win'

@@ -1,6 +1,6 @@
-appId: com.example.app
+appId: com.biggyspender.someapp
 copyright: Example co
-productName: MyApp
+productName: SomeApp
 
 asar: true
 
