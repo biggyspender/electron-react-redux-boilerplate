@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-sudo rm -rf build
-sudo rm -rf dist
+./clean.sh
 npm install
 npm run pack:mac
