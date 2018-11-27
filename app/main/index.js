@@ -1,5 +1,11 @@
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
+import configureStore from '../shared/store';
+import pify from 'pify';
+import jsonStorage from 'electron-json-storage';
+
+const f=app.getPath('userData')
+console.log(f)
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 let mainWindow = null;
@@ -32,11 +38,25 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+const storage = pify(jsonStorage);
 
 app.on('ready', async () => {
   if (isDevelopment) {
     await installExtensions();
   }
+
+  const state = await storage.get('state');
+  console.log("main initial state : ",state);
+  const store = configureStore(state || {}, "main");
+  store.subscribe(async () => {
+    const state = store.getState();
+    console.log("main new state : ",state);
+
+    // persist store changes
+    // TODO: should this be blocking / wait? _.throttle?
+    await storage.set('state', state);
+  });
+
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -58,7 +78,7 @@ app.on('ready', async () => {
     // 2. Click on icon in dock should re-open the window
     // 3. ⌘+Q should close the window and quit the app
     if (process.platform === 'darwin') {
-      mainWindow.on('close', function(e) {
+      mainWindow.on('close', function (e) {
         if (!forceQuit) {
           e.preventDefault();
           mainWindow.hide();

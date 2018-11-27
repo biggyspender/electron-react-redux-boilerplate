@@ -14,12 +14,15 @@ import {
 import userActions from './actions/user';
 import { getRootReducer } from './reducers';
 
-export default function configureStore(initialState, routerHistory, scope = 'main') {
+export default function configureStore(initialState, scope = 'main', routerHistory = undefined) {
   // const logger = createLogger({
   //   level: scope === 'main' ? undefined : 'info',
   //   collapsed: true,
   // });
-  const router = routerMiddleware(routerHistory);
+  if (scope === 'renderer' && !routerHistory) {
+    throw Error("should have router history")
+  }
+  const router = routerHistory && routerMiddleware(routerHistory);
 
   const actionCreators = {
     ...userActions,
@@ -28,11 +31,11 @@ export default function configureStore(initialState, routerHistory, scope = 'mai
 
 
 
-  let middlewares = [thunk, promise, router];
+  let middlewares = [thunk, promise];
 
   const composeEnhancers = (() => {
     // eslint-disable-next-line no-undef
-    const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+    const compose_ = scope === 'renderer' && window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     if (process.env.NODE_ENV === 'development' && compose_) {
       return compose_({ actionCreators });
     }
@@ -55,7 +58,7 @@ export default function configureStore(initialState, routerHistory, scope = 'mai
   }
 
   const enhanced = applyMiddleware(...middlewares);
-  const enhancer = composeEnhancers(enhanced, persistState());
+  const enhancer = (scope === 'renderer') ? composeEnhancers(enhanced, persistState()) : enhanced;
 
 
 
