@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import routes from './routes';
 import configureStore from '../shared/store';
+import stateInitializationActions from "../shared/actions/stateInitialization"
 
 const syncHistoryWithStore = (store, history) => {
   const { router } = store.getState();
@@ -13,9 +14,10 @@ const syncHistoryWithStore = (store, history) => {
   }
 };
 
-const initialState = {};
+
 const routerHistory = createMemoryHistory();
-const store = configureStore(initialState, "renderer", routerHistory);
+const store = configureStore("renderer", routerHistory);
+store.dispatch(stateInitializationActions.initState())
 syncHistoryWithStore(store, routerHistory);
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
