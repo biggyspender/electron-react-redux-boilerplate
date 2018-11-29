@@ -47,13 +47,13 @@ export default function configureStore(scope = 'main', routerHistory = undefined
     }
     return compose;
   })();
-  const loggingMiddleware = () => next => action => {
-    console.log("main action : ", action)
-    next(action);
-  };
+  // const loggingMiddleware = () => next => action => {
+  //   console.log("main action : ", action)
+  //   next(action);
+  // };
   if (scope === 'renderer') {
     middlewares = [
-      loggingMiddleware,
+      //loggingMiddleware,
       forwardToMain,
       router,
       ...middlewares,
@@ -64,7 +64,7 @@ export default function configureStore(scope = 'main', routerHistory = undefined
     sagaMiddleware = createSagaMiddleware()
 
     middlewares = [
-      loggingMiddleware,
+      //loggingMiddleware,
       triggerAlias,
       sagaMiddleware,
       ...middlewares,
@@ -74,7 +74,7 @@ export default function configureStore(scope = 'main', routerHistory = undefined
   }
 
   const enhanced = applyMiddleware(...middlewares);
-  const enhancer = (scope === 'renderer') ? enhanced : composeEnhancers(enhanced, persistState(reduxLocalStorageAdapter))
+  const enhancer = (scope === 'renderer') ? composeEnhancers(enhanced) : composeEnhancers(enhanced, persistState(reduxLocalStorageAdapter))
 
 
 
