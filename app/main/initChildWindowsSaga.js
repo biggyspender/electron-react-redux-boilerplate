@@ -4,7 +4,7 @@ import { actionTypes } from 'redux-localstorage'
 import stateInitialization from '../shared/actions/stateInitialization'
 import { push } from 'connected-react-router';
 export default function* () {
-    const initAction = stateInitialization.initState().type
+    const initAction = stateInitialization.initState.toString();
     for (; ;) {
 
         yield take(initAction);
